@@ -1,0 +1,5 @@
+<% # views pass in an array of links, which get joined together to create the breadcrumbs
+
+Does this make more sense to roll into a helper instead?
+ -%>
+<p id="breadcrumb"><a href="/">Home</a> : <%= breadcrumbs.join(" : ")%></p>

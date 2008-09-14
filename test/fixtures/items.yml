@@ -1,0 +1,43 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+overdue_unfinished_item:
+  id: 1
+  name: "name"
+  priority: 3
+  description: "description"
+  wanted_on: <%= 4.days.ago.to_s :db %> 
+  dropdead_on: <%= 2.days.ago.to_s :db %> 
+  requester_id: 1
+  fixer_id: 1
+  lock_version: 0
+  finished_at: 
+  closed_at: 
+  updated_at: <%= 1.day.ago.to_s :db %>  
+  created_at: <%= 1.month.ago.to_s :db %>
+overdue_finished_but_unclosed_item:
+  id: 2
+  name: "name"
+  priority: 1
+  description: "description"
+  wanted_on: <%= 5.days.ago.to_s :db %> 
+  dropdead_on: <%= 2.days.ago.to_s :db %> 
+  requester_id: 1
+  fixer_id: 
+  lock_version: 0
+  finished_at: <%= 1.day.ago.to_s :db %>
+  closed_at: 
+  updated_at: <%= 1.day.ago.to_s :db %>  
+  created_at: <%= 1.month.ago.to_s :db %>
+item_without_updates_in_past_week:
+  id: 3
+  name: "name"
+  priority: 2
+  description: "description"
+  wanted_on: <%= 3.days.from_now.to_s :db %> 
+  dropdead_on: <%= 5.days.from_now.to_s :db %> 
+  requester_id: 1
+  fixer_id: 
+  lock_version: 0
+  finished_at: 
+  closed_at: 
+  updated_at: <%= 7.days.ago.to_s :db %>  
+  created_at: <%= 1.month.ago.to_s :db %>
