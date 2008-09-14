@@ -1,4 +1,5 @@
-class Post < ActiveRecord::Base  
+class Post < ActiveRecord::Base
+  
   belongs_to :item
   belongs_to :user
   validates_presence_of :item_id
@@ -8,12 +9,12 @@ class Post < ActiveRecord::Base
   after_save :update_item_timestamp
   
   def plaintext_content
-    strip_tags(content.gsub(/<br(\s+\/)?>/, "\n").gsub(/<\/(p|ol|ul|dl)>/, "\n\n"))
+    content.strip_tags.simple_format
   end
   
   protected
     def sanitize_content
-      content = sanitize(auto_link(content))
+      self.content = content.sanitize.auto_link.simple_format
     end
 
     def update_item_timestamp

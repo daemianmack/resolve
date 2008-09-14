@@ -86,6 +86,4 @@ Rails::Initializer.run do |config|
   ITEM_FIELDS_WHICH_ALLOW_SORTING = %w(id priority dropdead_on created_at updated_at name)
 end
 
-# Extend ActiveRecord with our TextEngine
-require 'text_engine'
-ActiveRecord::Base.send(:include, TextEngine)
+require 'resolve_extensions'
