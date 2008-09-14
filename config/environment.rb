@@ -87,3 +87,11 @@ Rails::Initializer.run do |config|
 end
 
 require 'resolve_extensions'
+
+# extend String with the TextHelper functions
+class String #:nodoc:
+  include ResolveExtensions::String::TextHelper
+end
+
+# Add sanitizing to all string & text model fields
+ActiveRecord::Base.send(:include, ResolveExtensions::ActiveRecord::TextScrubber)
