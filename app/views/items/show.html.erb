@@ -1,0 +1,7 @@
+<div id='item_<%=@item.id%>'>
+  <a href='/items/<%= @item.id %>' title='<%= @item.description %>'><%=h @item.name %></a>
+  <%= @item.updated_at.strftime(ITEM_DASH_DATE_FORMAT) rescue 'none' %>
+  <%= @item.wanted_on.strftime(ITEM_DASH_DATE_FORMAT) rescue 'none' %>
+  <%= @item.dropdead_on.strftime(ITEM_DASH_DATE_FORMAT) rescue 'none' %>
+  <%= @item.created_at.strftime(ITEM_DASH_DATE_FORMAT) rescue 'none' %>
+</div>
