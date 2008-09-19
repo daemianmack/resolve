@@ -29,11 +29,17 @@ ActionController::Routing::Routes.draw do |map|
 
   # See how all your routes lay out with "rake routes"
 
+  map.resources :users, :collection => { :open => :get, :fixing => :get, :requested => :get, :watching => :get}
+  map.resources :sessions
+  map.resources :items
+  map.resources :categories, :shallow => true do |category| # nested, 'shallow' resource. i believe this will let us construct queue-view URLs that are logical-looking.
+    category.resources :items
+  end
+
+  map.root :controller => "items"
+
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
   
-  map.resources :users, :collection => { :open => :get, :fixing => :get, :requested => :get, :watching => :get}
-  map.resources :sessions
-  map.resources :items
 end

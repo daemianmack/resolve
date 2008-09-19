@@ -3,7 +3,7 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  before_filter :login_required
+#  before_filter :login_required
   
   include AuthenticatedSystem
   # See ActionController::RequestForgeryProtection for details
