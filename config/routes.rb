@@ -4,10 +4,15 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'  
   
-  map.resources :users
+  map.resources :users, :collection => { :open => :get, :fixing => :get, :requested => :get, :watching => :get}
   map.resource :session
   map.resources :items
-
+  map.resources :categories, :shallow => true do |category| # nested, 'shallow' resource. i believe this will let us construct queue-view URLs that are logical-looking.
+    category.resources :items
+  end
+  
+  map.root :controller => "items"
+  
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
@@ -44,9 +49,14 @@ ActionController::Routing::Routes.draw do |map|
 
   # See how all your routes lay out with "rake routes"
 
+
+
+  map.root :controller => "items"
+
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing the them or commenting them out if you're using named routes and resources.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+
 end

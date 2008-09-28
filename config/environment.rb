@@ -90,7 +90,21 @@ Rails::Initializer.run do |config|
   
   # Customizable features - as with strings, we probably want to put a lot of this into a YAML config file to facilitate customization.
   ITEM_FIELDS_WHICH_ALLOW_SORTING = %w(id priority dropdead_on created_at updated_at name)
+
+  # Date customization. 
+  ITEM_DASH_DATE_FORMAT = '%a %b %d, %I:%M%p' #Wed Sep 17, 07:44PM
 end
+
+Rails::Initializer.run do |config|
+  config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate',
+    :source => 'http://gems.github.com'
+end
+
+WillPaginate::ViewHelpers.pagination_options[:inner_window] = '1'
+WillPaginate::ViewHelpers.pagination_options[:outer_window] = '0'
+WillPaginate::ViewHelpers.pagination_options[:separator] = ''
+
+require 'will_paginate' #necessary until rails' embedded version of this plugin contains the fix to preserve page params for custom routes
 
 require 'resolve_extensions'
 
