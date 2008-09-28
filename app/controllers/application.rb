@@ -2,30 +2,30 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  # Be sure to include AuthenticationSystem in Application Controller instead
+  include AuthenticatedSystem
+  
   helper :all # include all helpers, all the time
   before_filter :login_required
-  
-  include AuthenticatedSystem
+
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery  :secret => 'b714c45ba8db7ea39bc7371be6f5760a'
-
+  protect_from_forgery # :secret => '6b68b4aac7ceba865bafc0abb0b582b1'
+  
+  # See ActionController::Base for details 
+  # Uncomment this to filter the contents of submitted sensitive data parameters
+  # from your application log (in this case, all fields with names like "password"). 
+  filter_parameter_logging :password
+  
   # Declarative Exception Handling
   rescue_from ActiveRecord::RecordInvalid do |exception|
     render :action => (exception.record.new_record? ? :new : :edit)
   end
   
-  rescue_from ActionController::RoutingError, :with => :render_404
+  #rescue_from ActionController::RoutingError, :with => :render_404
   
   # [TODO] would we want to differentiate these from Routing Errors?
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
-
-  
-  # Never show passwords in the logs
-  filter_parameter_logging :password
-  
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_resolve_session_id'
 
   def render_401 
     respond_to do |format| 

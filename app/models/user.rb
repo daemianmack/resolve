@@ -1,10 +1,5 @@
 require 'digest/sha1'
-
-## NOTES TO SELF
-# prevent Users from being deleted. Instead, they should just be deactivated if destroy or delete are invoked
-# We'll want to add a 'permissions' model, which will govern a user's permissions towards a category.
 class User < ActiveRecord::Base
-  
   # Virtual attribute for the unencrypted password
   attr_accessor :password
   
@@ -26,12 +21,12 @@ class User < ActiveRecord::Base
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
   validates_length_of       :login,    :within => 3..40
-  validates_length_of       :email,    :within => 6..100
+  validates_length_of       :email,    :within => 3..100
   validates_uniqueness_of   :login, :email, :case_sensitive => false
   before_save :encrypt_password
   
 
-  
+
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = find_by_login(login) # need to get the salt
@@ -77,6 +72,11 @@ class User < ActiveRecord::Base
     save(false)
   end
 
+  # Returns true if the user has just been activated.
+  def recently_activated?
+    @activated
+  end
+
   protected
     # before filter 
     def encrypt_password
@@ -88,5 +88,6 @@ class User < ActiveRecord::Base
     def password_required?
       crypted_password.blank? || !password.blank?
     end
-
+    
+    
 end

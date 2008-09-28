@@ -41,17 +41,18 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     cookies.delete :auth_token
+    # protects against session fixation attacks, wreaks havoc with 
+    # request forgery protection.
+    # uncomment at your own risk
+    # reset_session
     @user = User.new(params[:user])
-
-    respond_to do |format|
-      if @user.save
-        flash[:notice] = 'User was successfully created.'
-        format.html { redirect_back_or_default(@user) }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
+    @user.save
+    if @user.errors.empty?
+      self.current_user = @user
+      redirect_back_or_default('/')
+      flash[:notice] = "Thanks for signing up!"
+    else
+      render :action => 'new'
     end
   end
 
@@ -83,4 +84,5 @@ class UsersController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

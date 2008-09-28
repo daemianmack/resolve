@@ -18,17 +18,18 @@ class <%= model_controller_class_name %>Controller < ApplicationController
     # uncomment at your own risk
     # reset_session
     @<%= file_name %> = <%= class_name %>.new(params[:<%= file_name %>])
-<% if options[:stateful] %>    raise ActiveRecord::RecordInvalid.new(@<%= file_name %>) unless @<%= file_name %>.valid?<% end %>
-    @<%= file_name %>.<% if options[:stateful] %>register<% else %>save<% end %>!
-    self.current_<%= file_name %> = @<%= file_name %>
-    redirect_back_or_default('/')
-    flash[:notice] = "Thanks for signing up!"
-  rescue ActiveRecord::RecordInvalid
-    render :action => 'new'
+    @<%= file_name %>.<% if options[:stateful] %>register! if @<%= file_name %>.valid?<% else %>save<% end %>
+    if @<%= file_name %>.errors.empty?
+      self.current_<%= file_name %> = @<%= file_name %>
+      redirect_back_or_default('/')
+      flash[:notice] = "Thanks for signing up!"
+    else
+      render :action => 'new'
+    end
   end
 <% if options[:include_activation] %>
   def activate
-    self.current_<%= file_name %> = params[:activation_code].blank? ? :false : <%= class_name %>.find_by_activation_code(params[:activation_code])
+    self.current_<%= file_name %> = params[:activation_code].blank? ? false : <%= class_name %>.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_<%= file_name %>.active?
       current_<%= file_name %>.activate<% if options[:stateful] %>!<% end %>
       flash[:notice] = "Signup complete!"

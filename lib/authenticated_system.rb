@@ -3,19 +3,19 @@ module AuthenticatedSystem
     # Returns true or false if the user is logged in.
     # Preloads @current_user with the user model if they're logged in.
     def logged_in?
-      current_user != :false
+      !!current_user
     end
 
-    # Accesses the current user from the session.  Set it to :false if login fails
-    # so that future calls do not hit the database.
+    # Accesses the current user from the session. 
+    # Future calls avoid the database because nil is not equal to false.
     def current_user
-      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie || :false)
+      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_user == false
     end
 
     # Store the given user id in the session.
     def current_user=(new_user)
-      session[:user_id] = (new_user.nil? || new_user.is_a?(Symbol)) ? nil : new_user.id
-      @current_user = new_user || :false
+      session[:user_id] = new_user ? new_user.id : nil
+      @current_user = new_user || false
     end
 
     # Check if the user is authorized
@@ -64,9 +64,9 @@ module AuthenticatedSystem
       respond_to do |format|
         format.html do
           store_location
-          redirect_to :controller => '/sessions', :action => 'new'
+          redirect_to new_session_path
         end
-        format.xml do
+        format.any do
           request_http_basic_authentication 'Web Password'
         end
       end
@@ -94,7 +94,7 @@ module AuthenticatedSystem
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.
     def login_from_session
-      self.current_user = User.find(session[:user_id]) if session[:user_id]
+      self.current_user = User.find_by_id(session[:user_id]) if session[:user_id]
     end
 
     # Called from #current_user.  Now, attempt to login by basic authentication information.
@@ -108,7 +108,6 @@ module AuthenticatedSystem
     def login_from_cookie
       user = cookies[:auth_token] && User.find_by_remember_token(cookies[:auth_token])
       if user && user.remember_token?
-        user.remember_me
         cookies[:auth_token] = { :value => user.remember_token, :expires => user.remember_token_expires_at }
         self.current_user = user
       end
