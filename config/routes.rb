@@ -2,15 +2,17 @@ ActionController::Routing::Routes.draw do |map|
 
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login '/login', :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'  
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.bootstrap '/bootstrap', :controller => 'users', :action => 'bootstrap' 
   
-  map.resources :users, :collection => { :open => :get, :fixing => :get, :requested => :get, :watching => :get}
+  map.resources :users, :new => { :bootstrap => :get }, :collection => { :open => :get, :fixing => :get, :requested => :get, :watching => :get}
   map.resource :session
   map.resources :items
   map.resources :categories, :shallow => true do |category| # nested, 'shallow' resource. i believe this will let us construct queue-view URLs that are logical-looking.
     category.resources :items
   end
-  
+ 
+ 
   map.root :controller => "items"
   
   # The priority is based upon order of creation: first created -> highest priority.

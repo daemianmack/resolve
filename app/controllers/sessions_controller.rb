@@ -3,8 +3,11 @@ class SessionsController < ApplicationController
   before_filter :login_from_cookie
   skip_before_filter :login_required, :only => [:new, :create]
 
-  # render new.rhtml
+  # If there are no users yet, this is a new install and they'll need to create a user
   def new
+    if User.find(:all).empty?
+      redirect_to bootstrap_url
+    end
   end
 
   def create

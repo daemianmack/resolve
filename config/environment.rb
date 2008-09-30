@@ -100,11 +100,11 @@ Rails::Initializer.run do |config|
     :source => 'http://gems.github.com'
 end
 
+require 'will_paginate' #necessary until rails' embedded version of this plugin contains the fix to preserve page params for custom routes
+
 WillPaginate::ViewHelpers.pagination_options[:inner_window] = '1'
 WillPaginate::ViewHelpers.pagination_options[:outer_window] = '0'
 WillPaginate::ViewHelpers.pagination_options[:separator] = ''
-
-require 'will_paginate' #necessary until rails' embedded version of this plugin contains the fix to preserve page params for custom routes
 
 require 'resolve_extensions'
 

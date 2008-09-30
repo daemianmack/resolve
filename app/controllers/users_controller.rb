@@ -1,4 +1,18 @@
 class UsersController < ApplicationController
+  skip_before_filter :login_required, :only => [:bootstrap]
+  
+  # If there are no users yet, this is a new install and they'll need to create a user
+  # [FIXME] Not very restful to have this action point to itself, but that may be preferable to 
+  # mucking around with conditional filter skips.
+  # We'll also need to override the rescue_from ActiveRecord::RecordInvalid within UsersController to handle the case that a new (Bootstrapped) user is created with errors
+  def bootstrap
+    if !User.find(:all).empty?
+      flash[:error] = "Bootstrapping is only for creating the first user."
+      redirect_to login_url
+    end
+    
+  end
+
   # GET /users
   # GET /users.xml
   def index
